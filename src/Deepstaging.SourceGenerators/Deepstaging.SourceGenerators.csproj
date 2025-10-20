@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup Label="Assembly Configuration">
+        <IsRoslynComponent>true</IsRoslynComponent>
+
+        <Company>Deepstaging</Company>
+        <Product>Configuration</Product>
+        <AssemblyName>Deepstaging.SourceGenerators</AssemblyName>
+        <RootNamespace>Deepstaging.SourceGenerators</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup Label="Package Configuration">
+        <IsPackable>true</IsPackable>
+        <PackageId>Deepstaging.SourceGenerators</PackageId>
+        <Title>Deepstaging.SourceGenerators</Title>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Dunet"/>
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions"/>
+        <PackageReference Include="Scriban"/>
+        <PackageReference Include="SourceGenerator.Foundations"/>
+        <PackageReference Include="System.Text.Json"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="**\Templates\**\*.scriban"/>
+        <EmbeddedResource Include="**\Templates\**\*.scriban"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Extensions\" />
+        <Folder Include="Generators\Http\HttpClient\Models\"/>
+        <Folder Include="Generators\Http\HttpClient\Providers\"/>
+        <Folder Include="Generators\Http\HttpClient\Templates\"/>
+    </ItemGroup>
+
+</Project>

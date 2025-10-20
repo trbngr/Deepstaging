@@ -1,0 +1,139 @@
+# Visual Studio / .NET Core common ignores
+
+.usr/
+.DS_Store
+
+## Build outputs
+bin/
+obj/
+[Bb]uild/
+out/
+artifacts/
+publish/
+
+## Visual Studio / IDE
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vcxproj.user
+*.ncb
+*.opensdf
+*.sdf
+*.cache
+*.ilk
+*.pdb
+*.ipdb
+*.mod
+*.vsp
+*.vspx
+*.log
+
+## Rider
+.idea/
+*.sln.iml
+*.DotSettings.user
+
+## JetBrains Rider Rider caches
+.idea/
+.gradle/
+.cache/
+*.iws
+
+## NuGet
+*.nupkg
+packages/
+.nuget/packages/
+project.assets.json
+project.lock.json
+.nuget/backup/
+.nuget/packages/*/build/
+
+## Dotnet tool & SDK
+.dotnet/
+global.json.lock
+*.dotnet/
+.nuget/NuGetFallbackFolder/
+
+## Publish / deployment
+*.publish.xml
+*.publishsettings
+publish/
+AppPackages/
+*.appxrecipe
+
+## Test output
+TestResults/
+*.trx
+*.coverage
+coverage/
+coverage.*.xml
+*.lcov
+*.opencover.xml
+
+## User-specific files
+*.userprefs
+*.rsuser
+*.userosscache
+
+## Logs
+*.log
+
+## Generated files
+*.Designer.cs
+*_i.c
+*_p.c
+*.generated.cs
+
+## Web / Static
+node_modules/
+wwwroot/node_modules/
+bower_components/
+
+## IDE config and backups
+*.orig
+*.rej
+*.bak
+
+## macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+## Windows thumbnail cache files
+Thumbs.db
+ehthumbs.db
+
+## Certificates, keys, secrets
+*.pfx
+*.p12
+*.key
+*.pem
+*.cer
+secrets.json
+local.settings.json
+appsettings.*.Local
+*.usersecrets
+
+## Docker
+docker-compose.override.yml
+docker-compose.*.yml
+
+## Coverage & profiling
+*.coverage
+*.coveragexml
+*.prof
+*.psess
+
+## Azure Functions / Static Web Apps local settings
+local.settings.json
+/.azurefunctions/
+
+## Misc
+.vagrant/
+.env
+.env.local
+.env.*.local
+
+# End of .gitignore

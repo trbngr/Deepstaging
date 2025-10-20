@@ -1,0 +1,7 @@
+namespace Deepstaging.Azure.Tables;
+
+[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+internal class AzureTableEntityAttribute(string partitionKey, string rowKey) : Attribute {
+    public string PartitionKey { get; } = partitionKey;
+    public string RowKey { get; } = rowKey;
+}

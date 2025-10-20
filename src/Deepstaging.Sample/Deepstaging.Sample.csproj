@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Deepstaging\Deepstaging.csproj"/>
+        <ProjectReference Include="..\Deepstaging.SourceGenerators\Deepstaging.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Azure.Data.Tables"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="appsettings*.yaml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="appsettings.Development.yaml">
+          <DependentUpon>appsettings.yaml</DependentUpon>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Update="appsettings.Development.json">
+            <DependentUpon>appsettings.json</DependentUpon>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="schemas\appsettings.example.json" />
+      <_ContentIncludedByDefault Remove="schemas\appsettings.schema.json" />
+      <_ContentIncludedByDefault Remove="schemas\secrets.example.json" />
+      <_ContentIncludedByDefault Remove="schemas\secrets.schema.json" />
+    </ItemGroup>
+
+</Project>

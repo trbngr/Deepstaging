@@ -1,0 +1,7 @@
+using Azure.Data.Tables;
+using Deepstaging.Azure.Tables;
+
+internal interface IAzureTableEntity<out T>
+{    
+    TableEntity ToTableEntity();
+}

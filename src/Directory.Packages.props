@@ -1,0 +1,39 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Azure.Data.Tables" Version="12.11.0" />
+    <PackageVersion Include="ConsoleAppFramework" Version="5.6.1" />
+    <PackageVersion Include="Dunet" Version="1.11.3" />
+    <PackageVersion Include="Kokuban" Version="0.2.0" />
+    <PackageVersion Include="Kurukuru" Version="1.5.0" />
+    <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.10" />
+    <PackageVersion Include="Microsoft.Build.Locator" Version="1.10.2" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageVersion>
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.14.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.14.0" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.FileExtensions" Version="9.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.10" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+    <PackageVersion Include="AsyncFixer" Version="1.6.0" PrivateAssets="All" />
+    <PackageVersion Include="MinVer" Version="6.0.0" PrivateAssets="All" />
+    <PackageVersion Include="Oakton" Version="6.3.0" />
+    <PackageVersion Include="Scriban" Version="6.4.0" />
+    <PackageVersion Include="SourceGenerator.Foundations" Version="2.0.13" />
+    <PackageVersion Include="System.Collections.Immutable" Version="9.0.0" />
+    <PackageVersion Include="System.Text.Json" Version="9.0.10" />
+    <PackageVersion Include="Vogen" Version="8.0.2" />
+    <PackageVersion Include="YamlDotNet" Version="16.3.0" />
+    <PackageVersion Include="YamlDotNet.System.Text.Json" Version="1.6.6" />
+  </ItemGroup>
+</Project>

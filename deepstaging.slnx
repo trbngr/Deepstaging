@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/build/">
+    <File Path="src\Directory.Build.props" />
+    <File Path="src\Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/script/">
+    <File Path="manage" />
+  </Folder>
+  <Project Path="src\Deepstaging.CLI\Deepstaging.CLI.csproj" Type="Classic C#" />
+  <Project Path="src\Deepstaging.Sample\Deepstaging.Sample.csproj" Type="Classic C#" />
+  <Project Path="src\Deepstaging.SourceGenerators\Deepstaging.SourceGenerators.csproj" Type="Classic C#" />
+  <Project Path="src\Deepstaging\Deepstaging.csproj" Type="Classic C#" />
+</Solution>

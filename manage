@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -e
+
+BUILD_DIR='.usr/bin/manage'
+
+FORCE_REBUILD=false
+ARGS=()
+for arg in "$@"; do
+  case $arg in
+    -f|--force-rebuild)
+      FORCE_REBUILD=true
+      ;;
+    *)
+      ARGS+=("$arg")
+      ;;
+  esac
+done
+
+# Build the project if it doesn't exist or force rebuild is requested
+if [ ! -f "$BUILD_DIR/manage.dll" ] || [ "$FORCE_REBUILD" = true ]; then
+  echo "Building the project..."
+  dotnet publish src/Deepstaging.CLI/Deepstaging.CLI.csproj -c Release -o "$BUILD_DIR"
+fi
+
+# Run the built application
+if [ -f "$BUILD_DIR/manage" ]; then
+  export DOTNET_ROOT=$HOME/.dotnet
+  exec dotnet "$BUILD_DIR/manage.dll" "${ARGS[@]}"
+fi
