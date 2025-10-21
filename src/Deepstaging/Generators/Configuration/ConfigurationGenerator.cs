@@ -38,12 +38,12 @@ public class ConfigurationGenerator()
 
                 ctx.AddSource(
                     hintName: hint.Create("ConfigurationRegistrationExtensions"),
-                    source: RenderRegistrationExtensions(infos: registrations)
+                    source: RenderRegistrationExtensions(registrations)
                 );
 
                 ctx.AddSource(
                     hintName: hint.Create("ConfigurationSupport"),
-                    source: RenderConfigurationSupport(infos: registrations)
+                    source: RenderConfigurationSupport(registrations)
                 );
             });
     }
@@ -69,20 +69,29 @@ public class ConfigurationGenerator()
 
     private static string RenderConfigurationSupport(ImmutableArray<ConfigurationRegistrationInfo> infos)
     {
-        var updateSecretsScript =
-            RenderTemplate("Configuration.Templates.UpdateLocalSecretsScript", renderHeader: false);
+        try
+        {
+            var updateSecretsScript =
+                RenderTemplate("Configuration.Templates.UpdateLocalSecretsScript", renderHeader: false);
 
-        return RenderTemplate(
-            name: "Configuration.Templates.ConfigurationSupport",
-            context: new
-            {
-                @namespace = infos[0].Namespace,
-                update_secrets_script = updateSecretsScript,
-                app_settings_schema = JsonSchema.RenderJsonSchema(infos, AppSettings),
-                secrets_schema = JsonSchema.RenderJsonSchema(infos, Secrets),
-                app_settings_example = JsonSchema.RenderExampleFile(infos, AppSettings),
-                secrets_example = JsonSchema.RenderExampleFile(infos, Secrets)
-            }
-        );
+            var re = RenderTemplate(
+                name: "Configuration.Templates.ConfigurationSupport",
+                context: new
+                {
+                    @namespace = infos[0].Namespace,
+                    update_secrets_script = updateSecretsScript,
+                    app_settings_schema = JsonSchema.RenderJsonSchema(infos, AppSettings),
+                    secrets_schema = JsonSchema.RenderJsonSchema(infos, Secrets),
+                    app_settings_example = JsonSchema.RenderExampleFile(infos, AppSettings),
+                    secrets_example = JsonSchema.RenderExampleFile(infos, Secrets)
+                }
+            );
+        
+            return re;
+        }
+        catch (Exception e)
+        {
+            throw;
+        }
     }
 }

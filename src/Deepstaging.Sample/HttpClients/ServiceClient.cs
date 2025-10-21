@@ -9,7 +9,7 @@ namespace Deepstaging.Sample.HttpClients;
 public record ServiceClientConfig
 {
     [Description("The base url of the service")]
-    public required Uri BaseUrl { get; init; }
+    public required string BaseUrl { get; init; }
 
     [Secret, Description("The API key for authenticating with the service")]
     public required string ApiKey { get; init; }

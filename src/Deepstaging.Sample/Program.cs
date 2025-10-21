@@ -7,7 +7,7 @@ builder
     .RegisterConfigurations()
     .AddServiceClient((client, config) =>
     {
-        client.BaseAddress = config.BaseUrl;
+        client.BaseAddress = new(config.BaseUrl);
         client.DefaultRequestHeaders.Add("x-functions-key", config.ApiKey);
     });
 

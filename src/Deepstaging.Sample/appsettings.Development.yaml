@@ -2,4 +2,4 @@ Deepstaging:
   Sample:
     HttpClients:
       ServiceClientConfig:
-        BaseUrl: https://fchntestapi.azurewebsites.net/api/
+        BaseUrl: ''

@@ -63,6 +63,7 @@ public class ConfigurationCommands
                     yaml: true,
                     merge: true)
                 from f in WriteLocalSecretsUpdateScript($"{outputDir.Value}/secrets-update.sh")
+                // from g in WriteConstValue("SecretsJsonExample", [$"{outputDir.Value}/secrets.example.yaml"], yaml: true)
                 select 0;
 
             return results.Match(
