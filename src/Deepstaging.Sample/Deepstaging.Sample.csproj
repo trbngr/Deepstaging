@@ -40,11 +40,4 @@
         <Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
     </ItemGroup>
 
-    <ItemGroup>
-        <_ContentIncludedByDefault Remove="schemas\appsettings.example.json"/>
-        <_ContentIncludedByDefault Remove="schemas\appsettings.schema.json"/>
-        <_ContentIncludedByDefault Remove="schemas\secrets.example.json"/>
-        <_ContentIncludedByDefault Remove="schemas\secrets.schema.json"/>
-    </ItemGroup>
-
 </Project>
