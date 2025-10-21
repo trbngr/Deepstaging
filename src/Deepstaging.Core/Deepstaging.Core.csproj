@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>.net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Deepstaging</RootNamespace>
+        <LangVersion>preview</LangVersion>
+        <PackageId>Deepstaging.Core</PackageId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Dunet" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" />
+        <PackageReference Include="Microsoft.Extensions.Http" />
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions"/>
+        <PackageReference Include="Oakton" />
+        <PackageReference Include="Vogen" />
+        <PackageReference Include="YamlDotNet" />
+        <PackageReference Include="YamlDotNet.System.Text.Json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="DataTypes\Result.Extensions.cs">
+        <DependentUpon>Result.cs</DependentUpon>
+      </Compile>
+      <Compile Update="DataTypes\ResultStatus.cs">
+        <DependentUpon>Result.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>

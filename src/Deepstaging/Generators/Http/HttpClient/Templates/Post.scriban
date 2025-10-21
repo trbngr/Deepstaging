@@ -1,0 +1,91 @@
+namespace {{client.namespace}};
+
+using static Data.Result<{{ request.unwrapped_return_type }}>;
+
+public partial interface I{{ client.type_name }}
+{
+    {{ request.return_type }} {{ request.name }}({{ request.arguments }}, CancellationToken token = default);
+}
+
+public partial class {{ client.type_name }}
+{
+    // ReSharper disable once UnusedMember.Global
+    private partial {{ request.return_type }} {{ request.name }}({{ request.arguments }})
+        => {{ request.name }}({{ request.arguments_for_call }}, CancellationToken.None);
+        
+    public async {{ request.return_type }} {{ request.name }}({{ request.arguments }}, CancellationToken token = default)
+    {
+        var request = new {{ request.name }}(
+            Deserialize: DeserializeJson<{{ request.unwrapped_return_type }}>,
+            OnError: e => throw e,
+    {{~ if request.returns_value ~}} 
+            OnSuccess: value => value,
+    {{~ else ~}}
+            OnSuccess: () => {},
+    {{~ end ~}}
+            BodyFactory: {{ request.body_factory }})
+            {                
+                Path = "{{ request.path }}",
+                Serialize = SerializeJson,                
+                Tags = new()
+                {
+                    {{ request.tags }}
+                }
+            };
+            
+        {{~ if client.has_configure_request_method == true ~}} 
+        request = ({{ request.name }})ConfigureRequest(request); 
+        {{~ end ~}}
+
+        var result = await Post(
+            req: new {{ client.type_name }}Req<{{ request.unwrapped_return_type }}>(request, request.Deserialize),
+            body: request.BodyFactory({{ request.arguments_for_call }}),
+            token: token
+        );
+
+        {{~ if request.returns_value ~}} 
+        return result switch
+        {
+            Success s => request.OnSuccess(s.Value),
+            Error e => request.OnError(e.Exception!),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        {{~ else ~}}
+        result.MatchError(error: error => request.OnError(error.Exception!), @else: request.OnSuccess);
+        {{~ end ~}}
+    }
+}
+
+public sealed record {{ request.name }}(
+    {{~ if request.returns_value ~}} 
+    Func<{{ request.unwrapped_return_type }}, {{ request.unwrapped_return_type }}> OnSuccess,
+    {{~ else ~}}
+    Action OnSuccess,
+    {{~ end ~}}
+    Func<global::System.Exception, {{ request.unwrapped_return_type }}> OnError,
+    Func<global::System.Net.Http.HttpResponseMessage, {{ request.unwrapped_return_type }}?> Deserialize,
+    Func<{{ request.argument_types }}, object> BodyFactory) : {{ client.type_name }}Req() 
+    {
+            public {{ request.name }} AddTelemetryTag(string key, string value)
+            {
+                Tags.Add(key, value);
+                return this;
+            }
+            
+            public {{ request.name }} ClearTelemetryTags()
+            {
+                Tags.Clear();
+                return this;
+            }
+            
+            public {{ request.name }} WithPath(string path) => this with {Path = path};            
+            public {{ request.name }} WithSerializer(Func<object, string> serialize) => this with {Serialize = serialize};
+            public {{ request.name }} WithDeserializer(Func<global::System.Net.Http.HttpResponseMessage, {{ request.unwrapped_return_type }}?> deserialize) => this with {Deserialize = deserialize};
+            public {{ request.name }} WithOnError(Func<global::System.Exception, {{ request.unwrapped_return_type }}> onError) => this with {OnError = onError};
+            {{~ if request.returns_value ~}} 
+            public {{ request.name }} WithOnSuccess(Func<{{ request.unwrapped_return_type }}, {{ request.unwrapped_return_type }}> onSuccess) => this with {OnSuccess = onSuccess};
+            {{~ else ~}}
+            public {{ request.name }} WithOnSuccess(Action onSuccess) => this with {OnSuccess = onSuccess};
+            {{~ end ~}}
+            public {{ request.name }} WithBody(Func<{{ request.argument_types }}, object> bodyFactory) => this with {BodyFactory = bodyFactory};
+    }

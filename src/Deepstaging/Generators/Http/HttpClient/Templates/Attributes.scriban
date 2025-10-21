@@ -1,0 +1,14 @@
+namespace Deepstaging.HttpClient;
+
+[AttributeUsage(validOn: AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+public class HttpClientAttribute(string name, Type? configuration = null) : Attribute
+{
+    public string Name { get; } = name;
+    public Type? Configuration { get; } = configuration;
+}
+
+[AttributeUsage(validOn: AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+public class HttpPostAttribute(string path) : Attribute
+{
+    public string Path { get; } = path;
+}

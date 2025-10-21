@@ -12,6 +12,8 @@
         <NoWarn>$(NoWarn);CS1591;NU1701</NoWarn>
         <WarningsAsErrors>true</WarningsAsErrors>
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+
+        <UserSecretsId>82e1a478-c5a6-4f25-bb60-6d458e880b86</UserSecretsId>
     </PropertyGroup>
 
     <PropertyGroup>

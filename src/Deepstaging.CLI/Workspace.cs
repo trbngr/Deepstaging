@@ -1,6 +1,6 @@
 #pragma warning disable RS1035
 
-using Deepstaging.DataTypes;
+using Deepstaging.Data;
 using Kurukuru;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;

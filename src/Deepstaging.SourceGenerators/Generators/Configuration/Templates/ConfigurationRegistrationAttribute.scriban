@@ -1,7 +1,0 @@
-namespace Deepstaging;
-
-[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
-internal sealed class ConfigurationRegistrationAttribute(string? section = null) : Attribute
-{
-    public string? Section { get; } = section;
-}

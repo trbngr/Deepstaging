@@ -1,17 +1,23 @@
-using Deepstaging.Sample;
-using Microsoft.Extensions.Options;
+using Deepstaging.Sample.HttpClients;
+using Oakton;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.RegisterConfigurationOptions();
+builder
+    .RegisterConfigurations()
+    .AddServiceClient((client, config) =>
+    {
+        client.BaseAddress = config.BaseUrl;
+        client.DefaultRequestHeaders.Add("x-functions-key", config.ApiKey);
+    });
+
+builder.Host.ApplyOaktonExtensions();
+
 var app = builder.Build();
 
-var my = app.Services.GetRequiredService<IOptions<MyConfiguration>>();
-var other = app.Services.GetRequiredService<IOptions<OtherConfiguration>>();
-var yetAnother = app.Services.GetRequiredService<IOptions<MyConfigurationExtensions.YetAnotherConfiguration>>();
+var serviceClient = app.Services.GetRequiredService<IServiceClient>();
+var clients = await serviceClient.GetClients("6023265200");
 
 app.MapGet("/", () => "Hello World!");
-app.Run();
 
-
-
+await app.RunOaktonCommands(args);

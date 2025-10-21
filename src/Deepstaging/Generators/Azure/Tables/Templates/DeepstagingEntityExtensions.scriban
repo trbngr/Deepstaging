@@ -1,0 +1,28 @@
+using Azure.Data.Tables;
+using Deepstaging.Azure.Tables;
+
+namespace {{ namespace }};
+
+using static System.Text.Json.JsonSerializer;
+
+public partial {{ type_kind }} {{ name }} : IAzureTableEntity<{{ name }}> 
+{
+    public string TableName => "{{ table_name }}";
+    
+    public TableEntity ToTableEntity() => new ({{ partition_key }}, {{ row_key }}) {
+        {{~ for property in all_properties ~}}
+        { "{{ property.name }}", {{ property.serialized_value }} }{{ if for.last == false }},{{ end }}
+        {{~ end ~}}
+    };
+}
+
+internal static class {{ name }}TableEntityExtensions
+{     
+    public static {{ name }} To{{ name }}(this TableEntity entity) => new() {
+        {{ partition_key }} = entity.PartitionKey,
+        {{ row_key }} = entity.RowKey,
+        {{~ for property in properties_without_keys ~}}
+        {{ property.name }} = {{ property.deserialized_value }}{{ if for.last == false }},{{ end }}
+        {{~ end ~}}
+    };
+}

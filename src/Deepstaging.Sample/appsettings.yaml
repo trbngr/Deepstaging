@@ -1,10 +1,5 @@
 Deepstaging:
   Sample:
-    MyConfiguration:
-      Name: ''
-    MyConfigurationExtensions:
-      YetAnotherConfiguration:
-        IsEnabled: false
-        Description: ''
-    OtherConfiguration:
-      Age: 0
+    HttpClients:
+      ServiceClientConfig:
+        BaseUrl: https://fchntestapi.azurewebsites.net/api/

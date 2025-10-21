@@ -1,0 +1,11 @@
+namespace {{ namespace }};
+
+public sealed record {{ type_name }}Req<T>({{ type_name }}Req Request, Func<global::System.Net.Http.HttpResponseMessage, T?> Deserialize);
+
+public abstract record {{ type_name }}Req
+{
+    public required string Path { get; init; }
+    public required Func<object, string> Serialize { get; init; }
+    public required global::System.Diagnostics.TagList Tags { get; init; }
+}
+

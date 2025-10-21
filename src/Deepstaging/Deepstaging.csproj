@@ -1,31 +1,42 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>.net9.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
+    <PropertyGroup Label="Assembly Configuration">
+        <IsRoslynComponent>true</IsRoslynComponent>
+
+        <Company>Deepstaging</Company>
+        <Product>Configuration</Product>
         <RootNamespace>Deepstaging</RootNamespace>
-        <AssemblyName>Deepstaging</AssemblyName>
-        <LangVersion>preview</LangVersion>
+    </PropertyGroup>
+
+    <PropertyGroup Label="Package Configuration">
+        <IsPackable>true</IsPackable>
+        <PackageId>Deepstaging</PackageId>
+        <Title>Deepstaging.SourceGenerators</Title>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Dunet" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" />
-        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions"/>
-        <PackageReference Include="Oakton" />
-        <PackageReference Include="Vogen" />
-        <PackageReference Include="YamlDotNet" />
-        <PackageReference Include="YamlDotNet.System.Text.Json" />
+        <PackageReference Include="Dunet"/>
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions"/>
+        <PackageReference Include="Microsoft.Extensions.Http" />
+        <PackageReference Include="Scriban"/>
+        <PackageReference Include="SourceGenerator.Foundations"/>
+        <PackageReference Include="System.Text.Json"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="DataTypes\Result.Extensions.cs">
-        <DependentUpon>Result.cs</DependentUpon>
-      </Compile>
-      <Compile Update="DataTypes\ResultStatus.cs">
-        <DependentUpon>Result.cs</DependentUpon>
-      </Compile>
+        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="**\Templates\**\*.scriban"/>
+        <EmbeddedResource Include="**\Templates\**\*.scriban"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Extensions\" />
     </ItemGroup>
 
 </Project>

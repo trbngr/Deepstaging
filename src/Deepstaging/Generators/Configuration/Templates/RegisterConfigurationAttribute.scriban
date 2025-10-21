@@ -1,0 +1,7 @@
+namespace Deepstaging.Configuration;
+
+[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+internal sealed class RegisterConfigurationAttribute(string? section = null) : Attribute
+{
+    public string? Section { get; } = section;
+}

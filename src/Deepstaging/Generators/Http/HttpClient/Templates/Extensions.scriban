@@ -1,0 +1,36 @@
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+namespace {{ namespace }};
+
+public static class {{ type_name }}Extensions
+{
+{{~ if configuration_type != null ~}}
+    public static TBuilder Add{{ type_name }}<TBuilder>(this TBuilder builder,
+        Action<global::System.Net.Http.HttpClient, {{ configuration_type }}> configure)
+        where TBuilder : IHostApplicationBuilder
+    {
+        
+        builder.Services.AddHttpClient<I{{ type_name }}, {{ type_name }}>(client =>
+        {
+            var scope = builder.Services.BuildServiceProvider().CreateScope();
+            var configuration = scope.ServiceProvider.GetRequiredService<Microsoft.Extensions.Options.IOptions<{{ configuration_type }}>>().Value;
+            configure(client, configuration);
+        });
+        return builder;
+    }
+{{~ else ~}}
+    public static TBuilder Add{{ type_name }}<TBuilder>(this TBuilder builder,
+        Action<global::System.Net.Http.HttpClient, IServiceProvider> configure)
+        where TBuilder : IHostApplicationBuilder
+    {
+        
+        builder.Services.AddHttpClient<I{{ type_name }}, {{ type_name }}>(client =>
+        {
+            var scope = builder.Services.BuildServiceProvider().CreateScope();
+            configure(client, scope.ServiceProvider);
+        });
+        return builder;
+    }
+{{~ end ~}}
+}

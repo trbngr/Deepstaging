@@ -19,9 +19,10 @@
         <PackageReference Include="Microsoft.Build.Locator"/>
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces"/>
         <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild"/>
+        <PackageReference Include="Scriban" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Deepstaging\Deepstaging.csproj"/>
+        <ProjectReference Include="..\Deepstaging.Core\Deepstaging.Core.csproj" />
     </ItemGroup>
 </Project>

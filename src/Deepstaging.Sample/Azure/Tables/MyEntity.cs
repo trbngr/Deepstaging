@@ -4,7 +4,7 @@ namespace Deepstaging.Sample.Azure.Tables;
 
 public record MyProperty;
 
-[AzureTableEntity(nameof(ThreadTs), nameof(Ts))]
+[AzureTableEntity(partitionKey: nameof(ThreadTs), rowKey: nameof(Ts), tableName: nameof(MyEntity))]
 public partial record MyEntity
 {
     public required byte[] ByteArrayProperty { get; init; }

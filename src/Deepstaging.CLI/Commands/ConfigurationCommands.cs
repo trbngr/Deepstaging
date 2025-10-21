@@ -1,6 +1,10 @@
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Nodes;
 using ConsoleAppFramework;
-using Deepstaging.DataTypes;
+using Deepstaging.Data;
+using Deepstaging.Text.Json;
+using Deepstaging.Threading.Tasks;
 using Kokuban;
 using Kurukuru;
 using Microsoft.CodeAnalysis;
@@ -18,7 +22,7 @@ public class ConfigurationCommands
     /// </summary>
     /// <param name="projectFile">-p, The csproj file to load.</param>
     /// <param name="outputDirectory">-o, The directory, relative to the passes project to store the files.</param>
-    [Command("write-schemas")]
+    [Command("write")]
     public async Task<int> WriteSchemasAndExamples(string projectFile, string outputDirectory)
     {
         Result<Config> result = await LoadProject(projectFile, outputDirectory);
@@ -46,17 +50,19 @@ public class ConfigurationCommands
                 return OnError("Project directory is null.");
 
             var results =
-                from a in WriteConstValue("AppSettingsJsonSchema", yaml: false,
-                    $"{outputDir.Value}/appsettings.schema.json")
-                from b in WriteConstValue("AppSettingsJsonExample", yaml: false,
-                    $"{outputDir.Value}/appsettings.example.json")
-                from c in WriteConstValue("SecretsJsonSchema", yaml: false,
-                    $"{outputDir.Value}/secrets.schema.json")
-                from d in WriteConstValue("SecretsJsonExample", yaml: true,
-                    $"{projectDirectory}/secrets.local.yaml")
-                from e in WriteConstValue("AppSettingsJsonExample", yaml: true,
-                    $"{projectDirectory}/appsettings.yaml",
-                    $"{projectDirectory}/appsettings.Development.yaml")
+                from a in WriteConstValue("AppSettingsJsonSchema", [$"{outputDir.Value}/appsettings.schema.json"])
+                from c in WriteConstValue("SecretsJsonSchema", [$"{outputDir.Value}/secrets.schema.json"])
+                from d in WriteConstValue("SecretsJsonExample", [$"{projectDirectory}/secrets.local.yaml"],
+                    yaml: true,
+                    merge: true,
+                    gitIgnore: true)
+                from e in WriteConstValue("AppSettingsJsonExample", [
+                        $"{projectDirectory}/appsettings.yaml",
+                        $"{projectDirectory}/appsettings.Development.yaml"
+                    ],
+                    yaml: true,
+                    merge: true)
+                from f in WriteLocalSecretsUpdateScript($"{outputDir.Value}/secrets-update.sh")
                 select 0;
 
             return results.Match(
@@ -68,21 +74,56 @@ public class ConfigurationCommands
                 error: error => OnError(error.Message)
             );
 
-            Result<int> WriteConstValue(string constName, bool yaml = false, params string[] files)
+            Result<int> WriteLocalSecretsUpdateScript(string file)
             {
-                var field = symbol
-                    .GetMembers(constName)
-                    .OfType<IFieldSymbol>()
-                    .FirstOrDefault(f => f is { IsConst: true, HasConstantValue: true });
+                const string constName = "UpdateSecretsScriptTemplate";
 
-                var value = field?.ConstantValue as string;
+                var value = ReadConstantValue(symbol, constName);
+                if (string.IsNullOrEmpty(value))
+                    return OnError($"Constant '{constName}' not found or has no value.");
+
+                var template = Scriban.Template.Parse(value);
+                var rendered = template.Render(new
+                {
+                    project_directory = projectDirectory,
+                    project_name = project.Name,
+                    examples_directory = outputDir.Value
+                });
+
+                File.WriteAllText(file, rendered);
+                var psi = new ProcessStartInfo("chmod", $"+x \"{file}\"")
+                {
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false
+                };
+                using var p = Process.Start(psi);
+                p?.WaitForExit();
+                spinner.Text = $"Wrote {file} to {outputDir.Value}";
+
+                return Result.Success(0);
+            }
+
+            Result<int> WriteConstValue(string constName, string[] files, bool yaml = false, bool merge = false,
+                bool gitIgnore = false)
+            {
+                var value = ReadConstantValue(symbol, constName);
                 if (string.IsNullOrEmpty(value))
                     return OnError($"Constant '{constName}' not found or has no value.");
 
                 foreach (var file in files)
                 {
+                    if (merge && File.Exists(file))
+                    {
+                        var existing = File.ReadAllText(file);
+                        var json = yaml ? existing.YamlToJson() : existing;
+                        value = JsonNode.Parse(value).Merge(JsonNode.Parse(json))!.ToJsonString();
+                    }
+
                     File.WriteAllText(file, yaml ? YamlConverter.SerializeJson(value) : value);
                     spinner.Text = $"Wrote {file} to {outputDir.Value}";
+
+                    if (gitIgnore) AddToGitIgnore(projectDirectory, file);
                 }
 
                 return Result.Success(0);
@@ -94,6 +135,38 @@ public class ConfigurationCommands
             spinner.Fail(Chalk.Red + $"Error: {errorMessage}");
             return Result.Error<int>(errorMessage);
         }
+
+        string? ReadConstantValue(INamedTypeSymbol symbol, string constName)
+        {
+            var field = symbol
+                .GetMembers(constName)
+                .OfType<IFieldSymbol>()
+                .FirstOrDefault(f => f is { IsConst: true, HasConstantValue: true });
+
+            var value = field?.ConstantValue as string;
+            return value;
+        }
+    }
+
+    private void AddToGitIgnore(string directory, string file)
+    {
+        var ignoreFile = Path.Combine(directory, ".gitignore");
+        var contentToAdd = Path.GetRelativePath(directory, file);
+
+        if (!File.Exists(ignoreFile))
+        {
+            File.WriteAllText(ignoreFile, contentToAdd);
+        }
+        else
+        {
+            var text = File.ReadAllText(ignoreFile);
+            if (!text.Contains(contentToAdd))
+            {
+                using var writer = File.AppendText(ignoreFile);
+                writer.WriteLine("# Added by Deepstaging CLI");
+                writer.WriteLine(contentToAdd);
+            }
+        }
     }
 
     private static async Task<Result<Config>> LoadProject(string projectFile, string outputDirectory)
@@ -103,7 +176,7 @@ public class ConfigurationCommands
 
         var result = await (
             from p in Workspaces.OpenProject((ProjectFile)projectFile)
-            from s in p.LoadSymbol("Deepstaging.Configuration.JsonSchema")
+            from s in p.LoadSymbol("Deepstaging.Configuration.ConfigurationSupport")
             from o in p.EnsureOutputDirectory(outputDirectory, spinner).AsTask()
             select (project: p, jsonSchemaSymbol: s, outputDir: o)
         );

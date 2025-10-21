@@ -1,0 +1,48 @@
+namespace {{ namespace }};
+
+public partial interface I{{ type_name }};
+
+public partial class {{ type_name }}(global::System.Net.Http.HttpClient client, global::Microsoft.Extensions.Logging.ILogger<ServiceClient> logger): I{{ type_name }}
+{
+    private readonly global::System.Net.Http.HttpClient _client = client;
+    private readonly global::Microsoft.Extensions.Logging.ILogger<ServiceClient> _logger = logger;
+
+    private async Task<global::Deepstaging.Data.Result<T?>> Post<T>({{ type_name }}Req<T> req, object body, CancellationToken token = default)
+    {
+        var request = req.Request;
+        
+        var activity = global::System.Diagnostics.Activity.Current?.Source.StartActivity($"POST {request.Path}", global::System.Diagnostics.ActivityKind.Client);
+        foreach (var tag in request.Tags) activity?.AddTag(tag.Key, tag.Value);
+
+        var serializedBody = request.Serialize(body);
+        var content =
+            new global::System.Net.Http.StringContent(serializedBody, global::System.Text.Encoding.UTF8, "application/json");
+
+        activity?.AddTag("http.path", request.Path);
+        activity?.SetTag("http.request.body", serializedBody);
+
+        var response = await _client.PostAsync(request.Path, content, token).ConfigureAwait(false);
+
+        try
+        {
+            response.EnsureSuccessStatusCode();
+            activity?.SetTag("http.status_code", (int)response.StatusCode);
+
+            return req.Deserialize(response);
+        }
+        catch (Exception e)
+        {
+            activity?.AddException(e);
+            return global::Deepstaging.Data.Result.Error<T?>(e.Message, e);
+        }
+    }
+    
+    private static string SerializeJson(object obj) =>
+        global::System.Text.Json.JsonSerializer.Serialize(obj);
+    
+    private static T? DeserializeJson<T>(HttpResponseMessage response) 
+    {
+        var json = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+        return global::System.Text.Json.JsonSerializer.Deserialize<T>(json);
+    }
+}
