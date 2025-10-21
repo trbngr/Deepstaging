@@ -11,7 +11,7 @@ using System.IO;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Deepstaging.Sample.HttpClients;
+namespace Deepstaging.Configuration;
 
 internal static class ConfigurationRegistrationExtensions
 {
