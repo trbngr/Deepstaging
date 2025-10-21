@@ -11,8 +11,8 @@ internal static class ConfigurationRegistrationExtensions
     public static TBuilder RegisterConfigurations<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {        
         builder.Configuration
-            .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", optional: true, reloadOnChange: true)
-            .AddYamlFile("appsettings.yaml", optional: true, reloadOnChange: true);
+            .AddYamlFile("appsettings.yaml", optional: true, reloadOnChange: true)
+            .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", optional: true, reloadOnChange: true);
             
         {{~for registration in registrations ~}}
         builder.Services.Configure<{{ registration.full_type_name }}>(

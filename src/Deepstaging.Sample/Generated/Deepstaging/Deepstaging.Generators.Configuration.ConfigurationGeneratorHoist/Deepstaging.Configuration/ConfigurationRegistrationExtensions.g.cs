@@ -18,8 +18,8 @@ internal static class ConfigurationRegistrationExtensions
     public static TBuilder RegisterConfigurations<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {        
         builder.Configuration
-            .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", optional: true, reloadOnChange: true)
-            .AddYamlFile("appsettings.yaml", optional: true, reloadOnChange: true);
+            .AddYamlFile("appsettings.yaml", optional: true, reloadOnChange: true)
+            .AddYamlFile($"appsettings.{builder.Environment.EnvironmentName}.yaml", optional: true, reloadOnChange: true);
             
         builder.Services.Configure<Deepstaging.Sample.HttpClients.ServiceClientConfig>(
             config: builder.Configuration.GetSection("Deepstaging:Sample:HttpClients:ServiceClientConfig")
