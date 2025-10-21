@@ -16,12 +16,12 @@ public class EntityGenerator() : IncrementalGenerator(name: nameof(EntityGenerat
         context.RegisterPostInitializationOutput(ctx =>
         {
             // ctx.AddEmbeddedAttributeDefinition();
-            ctx.AddSource(hint.Create("IAzureTableEntity"), 
+            ctx.AddSource(hint.Create("IAzureTableEntity"),
                 RenderTemplate("Azure.Tables.Templates.IAzureTableEntity"));
-            
+
             ctx.AddSource(hint.Create("AzureTableEntityAttribute"),
                 RenderTemplate("Azure.Tables.Templates.AzureTableEntityAttribute"));
-            
+
             ctx.AddSource(hint.Create("AzureTableEntityExtensions"),
                 RenderTemplate("Azure.Tables.Templates.AzureTableEntityExtensions"));
         });
@@ -35,7 +35,8 @@ public class EntityGenerator() : IncrementalGenerator(name: nameof(EntityGenerat
 
                 foreach (var entity in entities)
                 {
-                    ctx.AddSource(hint.Create("Entities", entity.Name),
+                    var scoped = new HintNameProvider(entity.Namespace);
+                    ctx.AddSource(scoped.Create(entity.Name),
                         RenderTemplate("Azure.Tables.Templates.DeepstagingEntityExtensions", entity));
                 }
             }
