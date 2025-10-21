@@ -69,29 +69,20 @@ public class ConfigurationGenerator()
 
     private static string RenderConfigurationSupport(ImmutableArray<ConfigurationRegistrationInfo> infos)
     {
-        try
-        {
-            var updateSecretsScript =
-                RenderTemplate("Configuration.Templates.UpdateLocalSecretsScript", renderHeader: false);
+        var updateSecretsScript =
+            RenderTemplate("Configuration.Templates.UpdateLocalSecretsScript", renderHeader: false);
 
-            var re = RenderTemplate(
-                name: "Configuration.Templates.ConfigurationSupport",
-                context: new
-                {
-                    @namespace = infos[0].Namespace,
-                    update_secrets_script = updateSecretsScript,
-                    app_settings_schema = JsonSchema.RenderJsonSchema(infos, AppSettings),
-                    secrets_schema = JsonSchema.RenderJsonSchema(infos, Secrets),
-                    app_settings_example = JsonSchema.RenderExampleFile(infos, AppSettings),
-                    secrets_example = JsonSchema.RenderExampleFile(infos, Secrets)
-                }
-            );
-        
-            return re;
-        }
-        catch (Exception e)
-        {
-            throw;
-        }
+        return RenderTemplate(
+            name: "Configuration.Templates.ConfigurationSupport",
+            context: new
+            {
+                @namespace = infos[0].Namespace,
+                update_secrets_script = updateSecretsScript,
+                app_settings_schema = JsonSchema.RenderJsonSchema(infos, AppSettings),
+                secrets_schema = JsonSchema.RenderJsonSchema(infos, Secrets),
+                app_settings_example = JsonSchema.RenderExampleFile(infos, AppSettings),
+                secrets_example = JsonSchema.RenderExampleFile(infos, Secrets)
+            }
+        );
     }
 }

@@ -22,8 +22,7 @@ public partial class ServiceClient(global::System.Net.Http.HttpClient client, gl
         foreach (var tag in request.Tags) activity?.AddTag(tag.Key, tag.Value);
 
         var serializedBody = request.Serialize(body);
-        var content =
-            new global::System.Net.Http.StringContent(serializedBody, global::System.Text.Encoding.UTF8, "application/json");
+        var content = new global::System.Net.Http.StringContent(serializedBody, global::System.Text.Encoding.UTF8, "application/json");
 
         activity?.AddTag("http.path", request.Path);
         activity?.SetTag("http.request.body", serializedBody);
